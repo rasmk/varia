@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+
+    <script>
+      L_NO_TOUCH = false;
+      L_DISABLE_3D = false;
+    </script>
+
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+    <style>
+      #map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 0;
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"
+    />
+
+    <meta
+      name="viewport"
+      content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <style>
+      #map_9263a64c6b2d604e2776144091930d15 {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        left: 0%;
+        top: 0%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="folium-map" id="map_9263a64c6b2d604e2776144091930d15"></div>
+  </body>
+  <script>
+    console.log(location);
+    const myself = new URLSearchParams(location.search).get("who") ?? "r";
+
+    const champagne = `Ślęża	Masyw Ślęży	35,6	718	x	x	x
+Wielka Sowa	Góry Sowie	60,7	1015	x	x	x
+Chełmiec	Góry Wałbrzyskie	68,5	850	x	x	x
+Waligóra	Góry Kamienne	71,1	936		x
+Kłodzka Góra	Góry Bardzkie	74,8	765	x	x	x
+Skopiec	Góry Kaczawskie	85,2	724	x	x	x
+Szczeliniec Wielki	Góry Stołowe	86,2	919	x
+Skalnik	Rudawy Janowickie	87,3	945	x	x	x
+Kowadło	Góry Złote	92,7	989	x
+Jagodna	Góry Bystrzyckie	98,6	977	x	x	x
+Rudawiec	Góry Bialskie	98,9	1112	x
+Orlica	Góry Orlickie	99,6	1084
+Śnieżka	Karkonosze	100,3	1603	x		x
+Śnieżnik	Masyw Śnieżnika	101,1	1425	x
+Biskupia Kopa	Góry Opawskie	102,5	889
+Wysoka Kopa	Góry Izerskie	121,1	1126
+Czupel	Beskid Mały	212,5	933
+Skrzyczne	Beskid Śląski	212,9	1257
+Babia Góra	Beskid Żywiecki	246,1	1725	x	x	x
+Lubomir	Beskid Makowski	254,9	904
+Łysica	Góry Świętokrzyskie	271,9	614
+Turbacz	Gorce	279,1	1310
+Mogielica	Beskid Wyspowy	280,2	1171
+Rysy	Tatry	305,8	2499	x	x	x
+Wysoka	Pieniny	313,5	1050		x
+Radziejowa	Beskid Sądecki	315,6	1266		x
+Lackowa	Beskid Niski	343,1	997		x
+Tarnica	Bieszczady	465,5	1346			x`;
+
+    const mapMarkers = {
+      Ślęża: {mountains: "Masyw Ślęży", coords: [50.865, 16.7078]},
+      "Wielka Sowa": {mountains: "Góry Sowie", coords: [50.6619, 16.5417]},
+      Chełmiec: {mountains: "Góry Wałbrzyskie", coords: [50.7669, 16.2269]},
+      Waligóra: {mountains: "Góry Kamienne", coords: [50.6833, 16.2833]},
+      "Kłodzka Góra": {mountains: "Góry Bardzkie", coords: [50.4636, 16.7347]},
+      Skopiec: {mountains: "Góry Kaczawskie", coords: [50.9278, 15.8589]},
+      "Szczeliniec Wielki": {
+        mountains: "Góry Stołowe",
+        coords: [50.4728, 16.3389],
+      },
+      Skalnik: {mountains: "Rudawy Janowickie", coords: [50.8022, 15.8947]},
+      Kowadło: {mountains: "Góry Złote", coords: [50.2764, 16.9514]},
+      Jagodna: {mountains: "Góry Bystrzyckie", coords: [50.27, 16.5839]},
+      Rudawiec: {mountains: "Góry Bialskie", coords: [50.2214, 16.9364]},
+      Orlica: {mountains: "Góry Orlickie", coords: [50.3119, 16.3939]},
+      Śnieżka: {mountains: "Karkonosze", coords: [50.7365, 15.7392]},
+      Śnieżnik: {mountains: "Masyw Śnieżnika", coords: [50.2075, 16.8494]},
+      "Biskupia Kopa": {mountains: "Góry Opawskie", coords: [50.2375, 17.5161]},
+      "Wysoka Kopa": {mountains: "Góry Izerskie", coords: [50.8442, 15.3661]},
+      Czupel: {mountains: "Beskid Mały", coords: [49.7794, 19.1878]},
+      Skrzyczne: {mountains: "Beskid Śląski", coords: [49.6842, 19.0389]},
+      "Babia Góra": {mountains: "Beskid Żywiecki", coords: [49.5731, 19.5292]},
+      Lubomir: {mountains: "Beskid Makowski", coords: [49.7833, 19.9667]},
+      Łysica: {mountains: "Góry Świętokrzyskie", coords: [50.8906, 20.8964]},
+      Turbacz: {mountains: "Gorce", coords: [49.5567, 20.1206]},
+      Mogielica: {mountains: "Beskid Wyspowy", coords: [49.6336, 20.2333]},
+      Rysy: {mountains: "Tatry", coords: [49.1794, 20.0883]},
+      Wysoka: {mountains: "Pieniny", coords: [49.4039, 20.5403]},
+      Radziejowa: {mountains: "Beskid Sądecki", coords: [49.4425, 20.6244]},
+      Lackowa: {mountains: "Beskid Niski", coords: [49.4661, 21.1161]},
+      Tarnica: {mountains: "Bieszczady", coords: [49.0744, 22.7267]},
+    };
+
+    const champagneMap = Object.fromEntries(
+      champagne.split("\n").map((line) => {
+        const fields = line.split("\t");
+        return [fields[0], {a: fields[4], j: fields[5], r: fields[6]}];
+      })
+    );
+
+    console.log("champagne", champagneMap);
+
+    var map_9263a64c6b2d604e2776144091930d15 = L.map(
+      "map_9263a64c6b2d604e2776144091930d15",
+      {
+        center: [50, 19.2],
+        crs: L.CRS.EPSG3857,
+        zoom: 7,
+        zoomControl: true,
+        preferCanvas: false,
+      }
+    );
+
+    var tile_layer_f1dbf47c667488d3d076e589d9f3a7b9 = L.tileLayer(
+      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+      {
+        attribution:
+          'Data by \u0026copy; \u003ca href="http://openstreetmap.org"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href="http://www.openstreetmap.org/copyright"\u003eODbL\u003c/a\u003e.',
+        detectRetina: false,
+        maxNativeZoom: 18,
+        maxZoom: 18,
+        minZoom: 0,
+        noWrap: false,
+        opacity: 1,
+        subdomains: "abc",
+        tms: false,
+      }
+    ).addTo(map_9263a64c6b2d604e2776144091930d15);
+
+    const getCount = (name) => {
+      const champagneItem = champagneMap[name];
+      if (!champagneItem) {
+        console.error("Did not find chamagne item for marker", name);
+      }
+
+      const count =
+        (champagneItem.a ? 1 : 0) +
+        (champagneItem.j ? 1 : 0) +
+        (champagneItem.r ? 1 : 0);
+
+      return count;
+    };
+
+    const getMarkerColor = (name) => {
+      const champagneItem = champagneMap[name];
+
+      const count = getCount(name);
+
+      if (count === 3) {
+        return "black";
+      } else if (count === 0) {
+        return "green";
+      }
+      if (champagneItem[myself] === "x") {
+        if (count === 2) {
+          return "darkblue";
+        }
+        return "blue";
+      }
+      if (count === 2) {
+        return "darkpurple";
+      }
+      return "purple";
+    };
+
+    const getIcon = (name) => {
+      const champagneItem = champagneMap[name];
+      if (champagneItem[myself] === "x") {
+        return "check";
+      }
+
+      const count = getCount(name);
+
+      switch (count) {
+        case 2:
+          return "star";
+        case 1:
+          return "star-half-empty";
+        default:
+          return "star-o";
+      }
+    };
+
+    const getPopupInfo = (name) => {
+      const champagneItem = champagneMap[name];
+      if (!champagneItem.a && !champagneItem.j && !champagneItem.r) {
+        return "";
+      }
+      const result = [];
+      if (champagneItem.r) {
+        result.push("R");
+      }
+      if (champagneItem.a) {
+        result.push("A");
+      }
+      if (champagneItem.j) {
+        result.push("J");
+      }
+      return `<br>${result.join("")}`;
+    };
+
+    for (const [name, data] of Object.entries(mapMarkers)) {
+      const marker = L.marker(data.coords, {}).addTo(
+        map_9263a64c6b2d604e2776144091930d15
+      );
+
+      const icon = L.AwesomeMarkers.icon({
+        icon: getIcon(name),
+        iconColor: "white",
+        markerColor: getMarkerColor(name),
+        prefix: "fa",
+      });
+      marker.setIcon(icon);
+
+      const popup = L.popup({width: "100%"});
+      const html = $(
+        `<div id="html" style="width: 100.0%; height: 100.0%;">${name} (${
+          data.mountains
+        })${getPopupInfo(name)}</div>`
+      )[0];
+      popup.setContent(html);
+      marker.bindPopup(popup);
+    }
+  </script>
+</html>
