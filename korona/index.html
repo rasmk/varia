@@ -93,6 +93,11 @@ Radziejowa	Beskid Sądecki	315,6	1266		x
 Lackowa	Beskid Niski	343,1	997		x	
 Tarnica	Bieszczady	465,5	1346			x`;
 
+    const final = {
+      Orlica: true,
+      Turbacz: true,
+    };
+
     const mapMarkers = {
       Ślęża: {mountains: "Masyw Ślęży", coords: [50.865, 16.7078]},
       "Wielka Sowa": {mountains: "Góry Sowie", coords: [50.6619, 16.5417]},
@@ -178,6 +183,10 @@ Tarnica	Bieszczady	465,5	1346			x`;
     };
 
     const getMarkerColor = (name) => {
+      if (final[name]) {
+        return "green";
+      }
+    
       const champagneItem = champagneMap[name];
 
       const count = getCount(name);
@@ -185,7 +194,7 @@ Tarnica	Bieszczady	465,5	1346			x`;
       if (count === 3) {
         return "black";
       } else if (count === 0) {
-        return "green";
+        return "darkgreen";
       }
       if (champagneItem[myself] === "x") {
         if (count === 2) {
@@ -200,6 +209,12 @@ Tarnica	Bieszczady	465,5	1346			x`;
     };
 
     const getIcon = (name) => {
+      // available icons: https://fontawesome.com/v4/icons/
+      
+      if (final[name]) {
+        return "glass";
+      }
+      
       const champagneItem = champagneMap[name];
       if (champagneItem[myself] === "x") {
         return "check";
